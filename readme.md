@@ -1,19 +1,33 @@
+Of course. It's an excellent idea to update the `README.md` with a troubleshooting guide. Our debugging journey has uncovered several common issues that a new user is very likely to face. Capturing this knowledge will make the project much more accessible and user-friendly.
 
-# Rust OCR Tool using Tesseract
+I will create two documents:
+1.  An updated `README.md` with a new "Troubleshooting" section.
+2.  A new, detailed `TROUBLESHOOTING.md` file that the main README will link to. This keeps the main file clean while providing comprehensive solutions.
 
-A simple, robust command-line tool for extracting text from images using the Tesseract OCR engine, written in Rust.
+---
+
+### 1. Updated `README.md` File
+
+Here is the revised `README.md`. The key change is the addition of the **Troubleshooting** section at the end.
+
+```markdown
+# Rust OCR Tool using Tesseract and PDFium
+
+A robust, command-line tool for extracting text from image-based PDF files using the Tesseract OCR engine, written in Rust.
 
 This project serves as a complete, end-to-end example of how to:
--   Interface with a native C/C++ library (Tesseract) from Rust.
+-   Interface with native C/C++ libraries (Tesseract, PDFium) from Rust.
+-   Render PDF pages to high-quality images suitable for OCR.
 -   Perform basic image preprocessing to improve OCR accuracy.
 -   Build a clean and reliable command-line application with proper error handling.
 
 ## Features
 
--   Extracts UTF-8 text from various image formats (PNG, JPEG, etc.).
--   Includes an image preprocessing step (grayscale conversion) to enhance accuracy.
--   Simple and straightforward command-line interface.
--   Built with robust error handling.
+-   Processes multi-page PDF files sequentially.
+-   Renders each PDF page to a 300 DPI TIFF image to maximize OCR quality.
+-   Extracts UTF-8 text from each page.
+-   Handles temporary file creation and cleanup automatically.
+-   Built with robust error handling to provide clear feedback.
 
 ## Prerequisites & Installation
 
@@ -25,9 +39,11 @@ Ensure you have the Rust compiler and Cargo installed. The easiest way is via [r
 
 ### Step 2: Install System Build Dependencies
 
-You must install the development packages for **Tesseract**, **Leptonica**, and **Clang** so that Cargo can compile the project.
+You must install development packages for Cargo to compile the project and its native dependencies.
 
 #### On Debian / Ubuntu / Linux Mint
+
+These packages provide the C/C++ toolchain and libraries for Tesseract. **Note that we do NOT need to install PDFium manually.**
 
 ```bash
 sudo apt-get update
@@ -41,45 +57,14 @@ sudo apt-get install -y \
 ```
 -   `build-essential`: Provides the fundamental C/C++ compiler (`gcc`, `make`).
 -   `pkg-config`: Helps Rust's build scripts find system libraries.
--   `libtesseract-dev`: The Tesseract OCR engine development files.
--   `libleptonica-dev`: The image processing library Tesseract depends on.
+-   `libtesseract-dev` & `libleptonica-dev`: The development files for the Tesseract OCR engine.
 -   `libclang-dev` & `clang`: Required by the `bindgen` crate to generate Rust bindings from C/C++ headers.
 
-#### On Fedora / CentOS / RHEL
-
-```bash
-sudo dnf groupinstall "Development Tools"
-sudo dnf install -y \
-    pkg-config \
-    tesseract-devel \
-    leptonica-devel \
-    clang-devel
-```
-
-#### On macOS
-
-Using [Homebrew](https://brew.sh/):
-```bash
-# This will install tesseract and its dependencies, including leptonica
-brew install tesseract
-
-# Install the Xcode Command Line Tools if you haven't already
-xcode-select --install
-```
-
-#### On Windows
-
-1.  **Install Build Tools for Visual Studio:**
-    -   Download the installer from the [Visual Studio Downloads page](https://visualstudio.microsoft.com/downloads/) (under "Tools for Visual Studio").
-    -   Run the installer and select the **"Desktop development with C++"** workload.
-2.  **Install Tesseract:**
-    -   Download an installer from the official [Tesseract at UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki) repository.
-    -   **Important:** During installation, ensure you select to install the **development files (headers and libraries)**.
-    -   Add the Tesseract installation directory (e.g., `C:\Program Files\Tesseract-OCR`) to your system's `PATH` environment variable.
+**PDFium Library Note:** This project uses the `pdfium-render` crate with its `bundle` feature enabled in `Cargo.toml`. This tells the build script to automatically download and compile the PDFium library, so no manual installation is required.
 
 ### Step 3: Install Tesseract Language Data (Runtime Dependency)
 
-The compiled program needs Tesseract's language data files (`.traineddata`) to run. Without them, it will fail with an error like `Failed loading language 'eng'`.
+The compiled program needs Tesseract's language data files (`.traineddata`) to run.
 
 #### On Debian / Ubuntu / Linux Mint
 Install the English language pack:
@@ -88,56 +73,36 @@ sudo apt-get install tesseract-ocr-eng
 ```
 (For all languages, you can use `tesseract-ocr-all`).
 
-#### On Fedora / CentOS / RHEL
-Install the English language pack:
-```bash
-sudo dnf install tesseract-langpack-eng
-```
-
-#### On macOS
-The English language pack is typically installed by default with `brew install tesseract`.
-
-#### On Windows
-The language packs are chosen during the Tesseract installation process. Re-run the installer and make sure you have selected "English" (or any other languages you need).
-
 ## Building and Running the Tool
 
 After completing all prerequisites, you can build and run the application.
 
 1.  **Build the Project**
-    Cargo will download and compile all the Rust crates.
+    Cargo will download and compile all the Rust crates. The first build may take several minutes as it also compiles the C++ PDFium library.
     ```bash
     cargo build --release
     ```
     The final executable will be located at `target/release/rust_ocr_tool`.
 
-2.  **Download a Test Image**
-    A standard image for testing Tesseract is `eurotext.png`. You can download it into your project directory:
+2.  **Run the OCR Tool**
+    Run the tool from the command line, passing the path to the PDF you want to process as an argument.
     ```bash
-    curl -o test.png https://raw.githubusercontent.com/tesseract-ocr/tessdoc/main/images/eurotext.png
+    cargo run --release -- path/to/your/document.pdf
     ```
 
-3.  **Run the OCR Tool**
-    Using Cargo is the easiest way:
-    ```bash
-    cargo run -- test.png
-    ```
-    Or by running the compiled binary directly:
-    ```bash
-    ./target/release/rust_ocr_tool test.png
-    ```
+## Troubleshooting
 
-### Expected Output
+Working with native C/C++ libraries can sometimes lead to build-time or run-time errors. We have compiled a comprehensive guide based on common issues encountered during the development of this tool.
 
-```
-Preprocessing image...
-Extracting text from image...
+**➡️ See the detailed [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) guide for solutions to common problems.**
 
---- Extracted Text ---
-The (quick) [brown] {fox} jumps!
-Over the $43,456.78 <lazy> #90 dog
-& duck/goose, as 12.5% of E-mail
-from aspammer@website.com is spam.
-...
---- End of Text ---
-```
+This guide covers:
+-   Build errors like `linker 'cc' not found` or missing system libraries (`leptonica`, `tesseract`).
+-   Runtime errors like missing `.traineddata` files.
+-   Runtime warnings about invalid image resolution (DPI).
+-   Issues related to breaking changes in dependency APIs.
+
+
+
+---
+
