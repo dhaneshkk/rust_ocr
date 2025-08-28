@@ -62,6 +62,7 @@ sudo apt-get install tesseract-ocr-eng
 (For all languages, you can use `tesseract-ocr-all`).
 
 ## Building and Running the Tool
+https://stackoverflow.com/questions/78554386/modifying-a-pdf-with-rust-and-pdfium
 
 After completing all prerequisites, you can build and run the application.
 0. ** Download libpdfium.so under lib folder

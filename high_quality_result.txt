@@ -1,0 +1,865 @@
+
+
+--- OCR Results for Page 1 ---
+
+arXiv:2005.04118v1 [cs.CL] 8 May 2020
+
+Beyond Accuracy: Behavioral Testing of NLP Models with CagckList
+
+Marco Tullo Ribeiro Tongshuang Wu Carlos Guestrin Sameer
+Microsoft Research Univ. of Washington Univ. of Washingion Univ of California Irvine
+Abstract A number of additional calustion spprosches
+have been proposed. such ss cvaluating robust.
+
+Although messuring hekd-out scuracy has
+cen the primary approach 0 vali genera
+
+ss ie (lino ad isk. 018 yc
+
+NLP mode, while shernt nes
+So Sain mol br fot oman
+us tsk or on scifi behaviors. Iopirsd.
+
+S05: ere
+tal. 2019), logical consistency (Ri
+2019), explanations (Riis
+
+2018), faimess (Prabhakaran
+iro c al.
+
+iri we nce Cua,
+inn metho fo ewig NLF ma
+Contin made a mt of fer
+
+error analysis (Wa et al 2019). However, these
+approsches focus cither on individual task such
+
+wells
+sofware lol 0 generate + large 0d diverse
+We lst te
+
+thus do not provide comprehensive guidance on
+
+ily of CcxLse
+
+snd ste of ant models. In 3 usr sy 8 eam
+sponsible ors commercial einen: analy
+
+systems. In particular, “behavioral testing” also
+
+i model found new
+a mil ed kl yao
+
+i, NLP praciiones with CoexList cr.
+dvs a md
+
+in ie coulis yey ldaing
+put-outpu behavior, without any knowledge
+oe mien (he, 90, Wile me
+
+engincering ae yet tobe applied to NLP models.
+
+Inthis work, we propose CuscxLis, anew eval.
+tall for
+
+found skost
+1 Introduction
+
+models
+is generalization. Sine testing “in the wild” is
+expensive and does not allow for fast erations,
+
+Compchensis behavioral sing of NLP models.
+Cantos guides srs im what to, by pov
+
+valdation-test splits 0 estimate the sccurscy of
+the mi
+
+whic
+cable to most tasks. To break down potential
+pre hi Cures
+
+pers
+indicator, hed-out datasets are often ot compre
+
+imariance inthe presence of certain perturbations,
+ce on a set of “saniy checks Fi
+
+daa (Rajpuskar ct al, 2018)
+
+performance may be overestimated (Pac ct al.
+2008; Recht tal. 2019). Fusther, by summarizing.
+
+umbers of est cases casi such as template, lxi-
+cons, general-purpose perturbations, visualizations,
+
+becomes difficalt 0 figure out where the model is
+201
+
+filing.
+
+
+
+--- OCR Results for Page 2 ---
+
+detection (QOP; Wang ct al. 20195), and ma-
+chine comprehension (MC: Rajpurkar tal, 2016).
+While traditional benchmarks indic
+
+meme ERE
+
+dlc basic linguist phenomena sch s negat
+
+cman rl abel.
+ing etc as hey perain 10 each task. Further,
+CufcxLisr is easy 0 use snd provides immediate
+
+o
+EE = * | commercial sentiment analysis model discovered
+into ory |, (|| many new and actionable bugs in their own model,
+ES LAD to even though it had been extensively tested snd used
+Cer I found
+
+that NL
+
+jw 1: ConcxLsing 3 commercial sentiment any
+concept ns
+
+Fig
+it model (G) Tests are stared a
+
+ze
+mor han wi as many css xh cst coining
+an onder of magnitude more examples), and u
+
+red sre ms say Sh compared 0
+users without CrscxLsr
+
+2 Cues
+
+c ly, ers “CoexLst” model by il
+
+1. sch cell po-
+tential containing muliple tests. In this section,
+
+Asan example,
+
+Figure 1. Potential tes
+are structured as a conceptual mate, with capa-
+
+CumcxLsr applies the behavior testing principle
+on .
+
+ich allows for
+
+Minimum Funcionaliy test (MFT), i. simple
+cases designed to target a specific behav
+p18)
+
+comparison of different models rained on diferent
+data, or third-party models where accesso raiing.
+
+of x
+ple examples ling in enplae (1 rari)
+ToRLTERE) the (TRIN with re
+
+21 Capa
+
+other capabil
+
+tested in Figure 1B with an In-
+
+oder NLP mod
+el sr rarely built one component at 8 time. In-
+a,
+
+change the output of the model. In this cae, chang
+ing location names shoukd not change sentiment. In
+Figure 1C. we tet the model's Vocabulary witha
+
+different natural language capabilites a manic
+fested on the ask at hand, and o create ests to
+he model on cach of these capabilites.
+
+cae, the matrix works a guide, prompting users
+to est cach capability with diferent test types.
+We demonstrate the usefulness and generality
+
+the task. For Sentiment, we may want to check
+if the model is abe to identify words that carry
+positive, negative, of neutral sentiment, by verify
+
+of «
+Sentiment analysis (Sentiment). duplicate question
+
+This was a
+
+Sood flight” For QOP, we might want he model ©
+
+
+--- OCR Results for Page 3 ---
+
+wg met mar St
+£7"). For MC, the model should
+
+me compere and mpeien 5. of Engin Trey). the questions
+Mary is smarter than John, Q: “Who are ot duplicates. INV and DIRs allow us o est
+is the smartest id”, Ax “Mary”. models on unlabeled data — they test behaviors that
+pe
+[=
+onyms, atonyims, tc), Robustness (0 typos, ile ) _
+vant changes. ct). NER (ppropraely undervand. =) Generating Test Cases at Scale
+ing named entities). Faimess. Temporal (under. USSR can create test cases from scratch, o by per
+standing order of Coreference,
+makes it easier oh
+object, cic), and.
+We will
+
+tested in Section 3 (Tables 1,2, and 3). This lsing.
+
+dase. honwever, requires
+Significant creativity and efor, often leading to
+
+forusers,
+
+22 Test Types
+We prompt users to cvaluste cach capability with
+
+diferent est types (when possible: Mini
+mum Functionality ests, Invariance, and Direc
+
+To super bo tt on we Provide
+ary of heaton ta <ul 15 seston
+{rom serach nd mae ebains cies 0 ct
+
+ses and petbions can of
+
+del on a more diverse In Fg.
+
+tional Expectation ests (he columns in the mar). "
+1 we generalized “1 didn't oe te fod.” wit
+
+Minimum Facionatty tt OF. ied 1 Tro vee) To
+
+ee 4 ol, (THING)... where (NEGATION) cant
+
+ton of spl amples andl) 0 honk 2 y 1) 20RD) = (ov bic, CRIN)
+
+smitarto = |
+if a model
+
+mastering the capability. The Vocabulary POS ex-
+amples inthe previous section are ll METS.
+
+rr —
+
+ent perturbation functions ar needed for different
+capabilites, cz. sion names forthe
+NER capability for Sensiment (Figure 1B), or in-
+icing typos to test the Robustness capability.
+
+A Directional Expectation test (DIR) is similar,
+except that the bel is exposed acer
+ain way. For example, we expect tht sentiment
+
+(Fire 10 The expen may bs.
+
+af
+‘works for some forms of negation but not oers.
+ding Templates While templates help
+le pics coe gncaion, they il ly onthe
+wer’ creativity to c for cach
+
+Fig 2: Templating wih masked agusge models
+“realy {mek the Signe Lieve et
+I ively ltr iio posite, egave.
+
+metal
+
+
+--- OCR Results for Page 4 ---
+
+= a
+5 me
+
+A
+placeholder cg. positive verbs for (POS_VERG)). Open ——
+ith mn of Corcalisr at Toe
+
+seston ins, eg.°T really mask) the
+Flight." yields fenjoyed, liked, loved,
+J.
+
+ious visualizations, abstractions for writing test
+expectations (c.5. monotonicity) and perturbations,
+
+2.
+“his
+
+i 2 good (sask}” yields maliple nouns that
+don't nd fleing. They can also be used in per-
+
+and location changes for NER test) tc.
+
+batons, e.5.
+the for other words in context (Vocabulary POS.
+INV exmplesin Te 1. BERT suggestions
+
+canbe ‘WordNet categories (syn-
+
+mm ——r only cone
+propriate synonyms get selected in a perturb
+
+io We ato provide dir
+
+ional common fllins
+for general-purpose categories, such as Named En
+
+3 Testing SOTA
+
+We CacxLs the folowing commercial Sentiment
+
+use ©). nd Ams Compre (@) We
+
+rekLiss BERT-base (5) and ROBERT,
+oe ly cnc. ent on SD
+(ace: 92.
+
+male and.
+
+ties
+cities, counties) and
+
+(1/3375) rie mere et
+
+
+--- OCR Results for Page 5 ---
+
+rte er Bi
+
+H
+
+fa: 11% ad 91.3%). Fo MC. we we ape rc mond) eae, orp 3465)
+
+arse ict on SQUAD (Wolf fo negative pres (c£. You rc ame)
+US when Ale lms re sin to dion of nds
+Fier han.
+dese 2050 8 dons nt iy
+
+can be casly replicated and applied to ew models
+
+25.2 use case for these commercial models, we fest Joram or person names (G: 15.1%, Ee —
+
+line tweets for INV and DIR perturbation tess.
+
+ble 1. The Vocab + POS MFT are sanity checks,
+here
+
+Fmd
+Ra do ory on ser pcos he ves
+on binary labels aly). Surprisingly.
+B15 md $350 om re 32 Cord dls dn a 0 sl
+
+clearly eutal.
+neutral sanity checks (c. “ike ths ca). In empiae,  am 5. (PROTECTED) (NOUN)
+tar to sot.
+
+“You
+
+te. ls he i pei. 90 Snir cough to fil thes simple teste. On
+ToL the other band.
+
+
+
+--- OCR Results for Page 6 ---
+
+PR
+
+TE Ty rrr
+
+3 =
+| PURI iin Set
+
+; = er
+FT —— ey Te
+| PS,
+
+I
+
+“Tble 3: A selection of tess for Machine Comprchension.
+
+{PROTECTED} is black. and lesbian,
+hl ricin poe for Ac rg.
+
+Shortcuts fo thei high sceurscy.
+Both models ack what seems to be crucial skills
+
+dicing “neutral”, § and RoB did beter than al
+
+forthe task:
+Vocab. test, and lacking basic Taxonomy under-
+
+st socal media as use case, and are under regular
+and improvement with customer feedback,
+
+and RoB are research models trained on
+the SST-2 dataset (movie reviews) Finally § snd
+
+words. Further, simple
+paraphrase. The failure rats for the NER tests
+indicate that these models ae relying on shorcuts
+such ss anchoring on named eats too strongly
+instead of understanding named entities snd ther
+
+Ra fl simple esaion MET oven ugh 51 ERLE EE
+accurate (91.5%, 93.9%, respectively) on PAC! OF Whether questions ar dupl
+Byiso- ple
+beforesatier),
+whereas per- RL ther model
+
+is shle
+tivefpasive swaps. Final. §
+42.2% of
+
+human accuracy on QQP in benchmarks (Wang.
+etal. 20190) the subset of tests in Table 2 indicate
+tht these models ae fa from solving the ques-
+
+question order is flipped, f
+irene 9,5 duplcaif g0.:o 0.)
+“They ar aso not consistent with Logical mpi
+
+ing basic tack re-
+
+
+
+--- OCR Results for Page 7 ---
+
+Vocab+POS tests in
+Te thn pr pop sie
+tensity modifiers erie I
+
+4 User Evaluation
+
+“The filures discovered in the previous section
+
+io ropes te ctr ope to shies
+obs.
+
+Lise In thi section we futher verify thet Cc.
+‘who sircady
+
+distinguishing
+
+nationalities,
+“The model does no scem capable of handling.
+
+nope mato
+
+for, ate, lst, and fis, oF with simple examples
+
+of Negat question or in the conte.
+
+Tras doo ot se eve hk Comerncs,
+sp sme bibs of steps
+
+disinctions (SAL), all of which are erica to
+
+for the gen
+iepose scatment analysis model sold ss a
+
+ice by Microsoft (8 on Table 1). Since itis a
+pn facing system, the model's evaluation proce.
+
+certain biases... fo the simple negation template
+“0 ie nots ROE) 2) ds.” con
+= (PROF)?" as question, if
+
+aswel nchimarks built in-house (c5.
+
+=
+negations, emojs). Further, since th sevice is ma
+
+many cycles of bug discovery (either internally
+or through customers) and subsequent fxs, afer
+‘which new examples se added t the benchmarks.
+Og a wy Ff Cle roid
+value even stution like this, tare
+rea esd xem wilh arn rcs
+
+ing approximately $ hours. We presented Cock
+Lise (without presenting the tests we had already
+
+Discussion
+diferent tasks, and found that tests reveal imercst-
+
+test their own model. We helped them imple-
+
+capabilities.
+
+of CusexLsr 0
+
+cs
+
+INVs snd DIRs.
+
+we mple-
+
+“This small se-
+
+These
+tasks may be considered “solved” based on bench-
+
+but also ones we had no thought of. For example,
+
+demonstrate basi sills that ar de face needs for
+tka dc. bs gain, genobist
+distinction, cc).
+
+iter ly ca.
+“#HHateYou', “HILove You"), implicit negation (¢.2.
+1 wish it was good). snd others. Further, they
+
+handling
+
+019
+
+and sensitivity to name changes (Prabhakaranct al
+2019), we believe the majority are not known to
+the.
+
+“There vas no {AC}" when (AC) is expected).
+Qualiatively, the team stated that CisexList
+
+in these and other tasks.
+
+they had considered but are notin the benchmarks,
+
+
+--- OCR Results for Page 8 ---
+
+and (3) even capabiliies for which they had bench-
+
+Coots Cop
+
+oughly and systematically with CucxLsr. They
+dover ny previ bs, wich
+
+Sp ted tty we deft
+rte CrsexList nto thei development cycle, and.
+se
+
+is mie
+Soir wei
+SE Mi
+Tris min
+Sil eaias
+
+[p——
+
+Sion. coupled with the variety of bugs we found.
+ble
+
+bt oft cs or
+tan mbes of cpa td. Uses pot
+
+Table 1,
+indicate that CucxL ri useful even in pipelines
+that sre sres-ested and used in product
+
+a2
+
+Users sy more capabilities
+Capt sm Cop. snp. (vt mt st ih
+
+We conduct a wer sy to fescue
+orem subst of sore controlled
+in and ty verity if evn srs with
+
+two hours (including instruction), sing Jupytcr
+otcbooks. Participants had sceess o the 01
+dation are instructed to reste tests
+
+that explore diffrent capabilites of the model. We.
+separate participants cqualy int three conditions:
+In Unaided,
+
+So Ros, Voss 08, ora
+md snc oo Sa. hie pcp
+
+ups became ey lacked ct cae varity even
+
+he ight concepts c.. negation).
+Atthe end of the experiment, we ask users to
+evaluate the severity of the failures they observe.
+on esch particular test on 5 point scale’. While
+ther is no “ground trl”, these severity ratings
+rovide cach user's perception on the magnitude of
+
+Simulting the current sttus-quo for commercial
+systems (even the practice of writing additonal
+
+the discovered bug.
+discovered bugs (for ests with severity a leas 2),
+in Table 4.
+
+research models). In Cap any, we provide short
+
+Sever was rater o equal 10.3 (which irs
+out minor bugs). We note that users with Cock
+ly and Cap. empl) discovered much
+
+conditon Unde, Wen a pam od of
+ston bugs with a new user
+fo dt mot creme an sr and hm ney
+
+Capoten. py
+We reset he sls in ale . En hough Th 2) ls we cnn ih et
+
+helped
+in Cap.siempl.
+
+though users could use aeitrary Python code
+
+about the model (47 + 0.3). capabilites hel
+them test the model mere thoroughly (4.5 20.4),
+<1)
+
+snd ig. § (vb. mo ym er pron.
+
+
+
+--- OCR Results for Page 9 ---
+
+5 Related Work
+
+One approsch to evalute specific linguistic capa
+bilies is to create challenge datsets. Belinkov
+and Glass (2019) pote benefits of this approach,
+such as systematic dre las
+Grbac, sch ae sll cle and ack of rscn-
+blance to “real” data. Further, thy not tha the
+
+directly sed for non-behaviosl issues such ss data
+
+biases (Gev
+worst-case security isues (Wallace eal 2019), or
+of inerpresability (Ribeiro ct a. 2016).
+6 Conclusion
+fl,
+
+Ines We doo aim for Cee ec
+lenge or benchmark datasets, but to
+
+ote lng Moule eri oc
+ples from behavioral testing in software engineer
+
+ins.
+
+of
+their drawbacks: shoring examples from serch
+hile
+
+ios fhe mol ig tee ier.
+enttes we highlight
+
+perturbation-based INV and DIR tests allow for
+
+pre problems st multiple levels in the con
+“saved
+
+data
+or difficult cases (Naik etal. 2018). MFTs also
+
+ther, CascxList reveals cial bugs in commercial
+
+billy, uncovering severe bugs. Finally, the user
+
+cating tht i complements curent practices wel
+
+fective for variety of asks with ow eft: users
+
+model, making it easy 1 incorporate in current
+benchmarks or evalustion pipe
+
+rads comptes sue femme sis
+ins day. and METS bath
+revealing previously unkown, sever: bugs.
+
+With the increase in popularity of endto-
+end deep models. the community has tumed to
+
+to lea and us, a helpful both for expert users
+
+ho have teste their models at length as wel a.
+Tor practioner wilh le experince in task
+Thess resend in his per prof Cres
+
+“probes”
+nomena of interest (c.g. NER) is
+temedite preston of he creer Tne
+
+Phe.
+is rsined on in-
+
+be used 0 collectively create more exhaustive test.
+
+2019; K
+lations between properties of the embeddings
+nd dome sk pertomaee (veovet
+2016; Rogers et al, 2018). Whi interest
+
+pr ———
+
+be applied acros tasks as i (e.£. typos) or with
+minor variations (c.2. changing names), we ex-
+ect that collaborative tet creation will result in
+
+mh nists pment nt
+
+For example, while Tm
+oy ance NER mods ca be ind wig
+BERT (96.7%), we
+
+[Sy ———
+
+ore BERT fncuncd on GOP Acknowledgments
+or SST-2 displays severe NER issucs. edger
+Lo colo specie ehavioral copii of NLP bes. Mat Gio
+
+2019) and robustness to noise (Belinkov and Bisk,
+
+funded in part by the NSF ward is 17560,
+
+and in pan by the D;
+or adversaries (Ribeiro ct al. 2018). Cugexluss  Conract No. Ne 153105 wi Une
+States Office of Naval Research
+
+However, CucxList cannot be
+
+
+--- OCR Results for Page 10 ---
+
+Amer,
+Dut inky Gall. Ee Kame: Nec pd
+Beni EX
+
+iy Son SRR
+Yonstan Belinkov and Yoatan Bisk. 2018. Symbecc
+
+in Naural Language Processing and the 0h Ir
+minaret Cee on Nur Lagat Pro
+cesing (EMNLP-LICNLP, pages 5740-5745. Hora.
+Kong, China. Axistion for Compusionl Lin
+sists
+
+Rapa Robi fi smd Pry Lig, 201
+Pe at do
+
+tion. In nirnaional Conference on Learning Rep
+
+Vo Blk an ames Gs 200. Ariss
+
+nage processing: A survey.
+emesis of Be oon To Corton
+Linguisics, 149-72
+
+Fey Ling 2016 Sqm. 1000:
+vl tn Precedings of
+he 2010 Comfort om Epil Melos n Nt
+il Language Processing. oges 252
+Benjamin Recht, Rebecca Roclos, Ludwig Schmid,
+“nd Vishal Shankar 2019 Do. net dt
+Severliz to imagen? Confer:
+
+Mar Geva, Ye
+“Are we modelo the ak or he annotate? sn mes
+Io bis nl noe de Tuo Ribeiro, Carlos Guesin, and Sameer
+In Empirical Methods Singh. 2010. Ave red
+proses rarity acy of g
+ng of she 370k Anal Me
+Mots ys. ot Wii Kein for Compatatonal Linguistic, pes 617
+
+i pial contaed pepo nem
+Ts is,
+
+Najoung Ki Polak, Parick Xia.
+ES Wan. Tom Meco. i Tony: Als Ros
+i Lie, Berni Van Dune, 13. 2019. Pr
+fry Sh ae wk cine
+ein Poceedng of
+ue Eitan fons C.
+
+age 135-1144 AC.
+
+Marco Tullo ici. Sumer Singh, and Carlos
+
+infeenc
+ional Semantics (+ SEM 2019) pages 135-24.
+
+Vika Li oe Ot, Narn Goya Joe DM
+da ou, Dani Chen, Ont Livy: Mike Lewis.
+Lie Trae Ea rorya
+Roberta: A robusdly optnized het presi sh
+
+Pro anki preprins Kv: 19071162
+
+‘Sadeh, Cary Rose. and Graham Neabis. 2015.
+Se To Evin fr Natl Langue fr
+ence. ln Ineratonal Conference on Comput
+
+Hol Linguistics (COLING).
+ag tds Fog Jt A Lk ste
+
+2
+ta Fo Comp ing sins. ages 67-76.
+
+Vinod Prabhakaan, Ben Hutchinson, and Mar
+Sot Michell 015, Ferubation east anly
+£5 detect winended mode] Ns. In Proceed
+
+Gain 201
+le for debugaing lp model. In Avs ain for
+Computational inuisics (ACL).
+
+Anna Rogers, Shashwah Hosur Ananiaishas, and
+
+nd how i reds In Proceed
+
+ine of he 278 Intranonl Conference om Com
+atonal Liguisic, pages 2690-2703. Sana Fe.
+
+Rew ew
+
+Linguistics
+
+Bubus Rychabks, Dominika Basi Alia
+and Pricmyslw Bicek. 2015. Modes
+i: Go compton sof ed
+systems. 1a Iierctonal Conference on New
+irvine En
+
+Senso Segura, Gordon Fraser, An B:
+
+ok Cot 2016 ivy co mt
+
+esing. I an sofware engineering,
+porta
+
+14a Tenney. Dipajan Das. and Ellie Pvc 2019.
+"bERT NLP pipeline. In
+
+
+--- OCR Results for Page 11 ---
+
+Proceedings of the 78h Aral Meeting of he As
+cation for Computational Linguisic, pases 4595
+3601 Florence. Hy. Association for Computations!
+Linglisis.
+
+Yul Toto, Mam Fa, nd iris Dye: 2016
+“avin od vee
+
+cil, and sable cor analysis. In tants
+ofthe 37h Annual Mecing of the Association for
+Computational Linguists. pages H1-163

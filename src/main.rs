@@ -1,101 +1,89 @@
-use anyhow::{Context, Result};
-use pdfium_render::prelude::*;
-use std::env;
-use std::path::Path;
-use tempfile::tempdir;
-use tesseract::Tesseract;
+mod config;
+mod error;
+mod ocr;
+mod pdf;
+mod image_processing;
 
-fn main() -> Result<()> {
-    // ... (main function is unchanged)
-    let args: Vec<String> = env::args().collect();
-    if args.len() < 2 {
-        anyhow::bail!("Usage: {} <path_to_pdf>", args[0]);
+use crate::config::Config;
+use crate::error::OcrError;
+use clap::Parser;
+use log::{error, info, warn};
+use std::fs::File;
+use std::io::Write;
+use std::time::Instant;
+
+fn main() {
+    // Initialize the logger. The user can control the verbosity
+    // by setting the `RUST_LOG` environment variable.
+    // Example: `RUST_LOG=debug cargo run -- ...`
+    env_logger::init();
+
+    // Parse command-line arguments.
+    let config = Config::parse();
+
+    // Record the start time.
+    let start_time = Instant::now();
+    info!("Starting OCR process for '{}'", config.pdf_path.display());
+
+    // Run the main application logic.
+    if let Err(e) = run(&config) {
+        error!("Application failed: {}", e);
+        // Additional context for specific errors can be logged here if needed.
+        std::process::exit(1);
     }
-    let pdf_path = Path::new(&args[1]);
-    if !pdf_path.exists() {
-        anyhow::bail!("PDF path does not exist: {}", pdf_path.display());
-    }
 
-    println!("Processing PDF: {}", pdf_path.display());
-
-    let extracted_pages = process_pdf_sequentially(pdf_path)
-        .context("Failed to process PDF sequentially")?;
-
-    println!("\n--- OCR Results ---");
-    for (page_num, text) in extracted_pages {
-        println!("\n--- Page {} ---\n", page_num + 1);
-        println!("{}", text);
-    }
-    println!("\n--- End of Document ---");
-
-    Ok(())
-}
-
-fn process_pdf_sequentially(pdf_path: &Path) -> Result<Vec<(usize, String)>> {
-    // ... (this function is unchanged)
-    let pdfium = Pdfium::new(
-        Pdfium::bind_to_library(Pdfium::pdfium_platform_library_name_at_path("./"))
-            .or_else(|_| Pdfium::bind_to_system_library())?,
+    info!(
+        "Successfully finished OCR process in {:?}",
+        start_time.elapsed()
     );
+}
 
-    let document = pdfium.load_pdf_from_file(pdf_path, None)
-        .with_context(|| format!("Failed to load PDF file: {}", pdf_path.display()))?;
+/// The core application logic.
+fn run(config: &Config) -> Result<(), OcrError> {
+    // Step 1: Render PDF pages to a temporary directory of images.
+    // The `_temp_dir` handle is kept in scope to ensure the directory is cleaned up
+    // automatically when this function returns (due to RAII).
+    let (_temp_dir, image_paths) = pdf::render_pdf_pages(&config.pdf_path, config.dpi)?;
 
-    let temp_dir = tempdir().context("Failed to create temporary directory")?;
+    let mut all_text = String::new();
+    let total_pages = image_paths.len();
 
-    let page_count = document.pages().len();
-    println!("PDF has {} pages. Starting sequential processing...", page_count);
+    // Step 2: Sequentially perform OCR on each rendered image.
+    for (i, image_path) in image_paths.iter().enumerate() {
+        let page_num = i + 1;
+        info!("Processing page {} of {}...", page_num, total_pages);
+        // Step 2a (Optional): Apply advanced image preprocessing if the flag is set.
+        if config.preprocess {
+            image_processing::preprocess_image(image_path)?;
+        }
 
-    let mut results = Vec::with_capacity(page_count as usize);
-
-    for page_index in 0..page_count {
-        let current_page_num = page_index + 1;
-        println!("Processing page {} of {}...", current_page_num, page_count);
-
-        let tiff_path = temp_dir.path().join(format!("page_{}.tiff", page_index));
-
-        render_page_to_tiff(&document, page_index as usize, &tiff_path)
-            .with_context(|| format!("Failed to render page {}", current_page_num))?;
-
-        let text = extract_text_from_image(&tiff_path)
-            .with_context(|| format!("Failed to extract text from page {}", current_page_num))?;
-
-        results.push((page_index as usize, text));
+        // Step 2b: Perform OCR, passing the optional tessdata path.
+        let tessdata_path_as_ref = config.tessdata_path.as_deref();
+        match ocr::extract_text_from_image(image_path, &config.lang, config.dpi, tessdata_path_as_ref,  config.psm,  config.oem, ) {
+            Ok(text) => {
+                all_text.push_str(&format!("\n\n--- OCR Results for Page {} ---\n\n", page_num));
+                all_text.push_str(&text);
+            }
+            Err(e) => {
+                // Log a warning for a single failing page but continue processing others.
+                warn!("Could not process page {}: {}. Skipping.", page_num, e);
+                all_text.push_str(&format!(
+                    "\n\n--- OCR FAILED for Page {} ---\n\n",
+                    page_num
+                ));
+            }
+        }
     }
 
-    Ok(results)
-}
-
-fn render_page_to_tiff(document: &PdfDocument, page_index: usize, output_path: &Path) -> Result<()> {
-    // ... (this function is unchanged)
-    let render_config = PdfRenderConfig::new()
-        .set_maximum_width(300);
-       // .for_printing(true);
-
-    let page = document.pages().get(page_index as u16)
-        .context("Failed to get page from PDF document")?;
-
-    let image = page.render_with_config(&render_config)?
-        .as_image();
-
-    image.save_with_format(output_path, image::ImageFormat::Tiff)
-        .with_context(|| format!("Failed to save image to {}", output_path.display()))?;
+    // Step 3: Write the collected text to the specified output.
+    if let Some(output_path) = &config.output_path {
+        info!("Writing results to file '{}'", output_path.display());
+        let mut file = File::create(output_path)?;
+        file.write_all(all_text.as_bytes())?;
+    } else {
+        info!("Printing results to console.");
+        println!("{}", all_text);
+    }
 
     Ok(())
-}
-
-/// Initializes Tesseract and extracts text from a given image file.
-fn extract_text_from_image(image_path: &Path) -> Result<String> {
-    // This function contains the fix.
-    let text = Tesseract::new(None, Some("eng"))
-        .context("Failed to initialize Tesseract")?
-        .set_image(image_path.to_str().unwrap())
-        .context("Failed to set image for Tesseract")?
-        // Explicitly tell Tesseract the image resolution.
-        .set_variable("user_defined_dpi", "300")
-        .context("Failed to set DPI variable")?
-        .get_text()
-        .context("Failed to get UTF-8 text from Tesseract")?;
-
-    Ok(text)
 }
