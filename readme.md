@@ -1,16 +1,4 @@
-Of course. It's an excellent idea to update the `README.md` with a troubleshooting guide. Our debugging journey has uncovered several common issues that a new user is very likely to face. Capturing this knowledge will make the project much more accessible and user-friendly.
 
-I will create two documents:
-1.  An updated `README.md` with a new "Troubleshooting" section.
-2.  A new, detailed `TROUBLESHOOTING.md` file that the main README will link to. This keeps the main file clean while providing comprehensive solutions.
-
----
-
-### 1. Updated `README.md` File
-
-Here is the revised `README.md`. The key change is the addition of the **Troubleshooting** section at the end.
-
-```markdown
 # Rust OCR Tool using Tesseract and PDFium
 
 A robust, command-line tool for extracting text from image-based PDF files using the Tesseract OCR engine, written in Rust.
@@ -76,19 +64,29 @@ sudo apt-get install tesseract-ocr-eng
 ## Building and Running the Tool
 
 After completing all prerequisites, you can build and run the application.
+0. ** Download libpdfium.so under lib folder
+get libpdfium.so from https://github.com/lailogue/rust-pdf-viewer
+```mkdir -p lib
 
+# Download PDFium library for x64 systems
+curl -L -o pdfium-linux-x64.tgz \
+  "https://github.com/bblanchon/pdfium-binaries/releases/latest/download/pdfium-linux-x64.tgz" && \
+  tar -xzf pdfium-linux-x64.tgz -C lib --strip-components=1 && \
+  rm pdfium-linux-x64.tgz
+  ```
 1.  **Build the Project**
     Cargo will download and compile all the Rust crates. The first build may take several minutes as it also compiles the C++ PDFium library.
     ```bash
-    cargo build --release
+    RUSTFLAGS="-L /home/ubuntu/rust_ocr/lib" LD_LIBRARY_PATH="/home/ubuntu/rust_ocr/lib" cargo build
     ```
     The final executable will be located at `target/release/rust_ocr_tool`.
 
 2.  **Run the OCR Tool**
     Run the tool from the command line, passing the path to the PDF you want to process as an argument.
     ```bash
-    cargo run --release -- path/to/your/document.pdf
+    RUSTFLAGS="-L /home/ubuntu/rust_ocr/lib" LD_LIBRARY_PATH="/home/ubuntu/rust_ocr/lib" cargo run --release -- path/to/your/document.pdf
     ```
+    
 
 ## Troubleshooting
 
